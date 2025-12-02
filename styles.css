@@ -1,0 +1,102 @@
+:root{
+  /* Dark theme colors */
+  --bg: #0b1220; /* deep night */
+  --panel: #0f1724; /* slightly lighter */
+  --me: linear-gradient(180deg,#15333b,#0b584f); /* deep teal bubble */
+  --them: #111827; /* neutral dark bubble */
+  --accent: #7dd3fc; /* cyan accent */
+  --muted: #9aa6b2;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Helvetica Neue', monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+.app{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+body{
+  margin:0;
+  font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    /* page-level background image is now hosted in .page-bg so it can be filtered (monochrome)
+      keep subtle radial gradients and fallback color on the body itself */
+    background-image: linear-gradient(180deg, rgba(2,6,23,0.4), rgba(2,6,23,0.18)),
+                radial-gradient(1200px 600px at 10% 20%, rgba(34,197,94,0.04), transparent),
+                radial-gradient(900px 480px at 90% 80%, rgba(99,102,241,0.03), transparent);
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-position: center center, 10% 20%, 90% 80%;
+    background-size: cover, 1200px 600px, 900px 480px;
+    background-color: var(--bg);
+  color:#e6eef6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+.app{
+  width: min(880px, 96vw);
+  height: min(780px, 94vh);
+  /* high-contrast translucent panel so chat stays readable on top of the page background */
+  background: linear-gradient(180deg, rgba(3,7,12,0.72), rgba(3,7,12,0.65));
+  backdrop-filter: blur(6px);
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 20px 50px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+/* locked state: darken the chat area so user sees it's been disabled */
+.app.locked{position:relative}
+.app.locked .composer{opacity:0.6}
+.app.locked .composer *{pointer-events:none}
+
+/* make input clearly grayed and read-only when locked */
+.app.locked .composer input{background:rgba(255,255,255,0.02);color:var(--muted);border-color:rgba(255,255,255,0.06)}
+
+/* Reset button in header */
+.reset-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:999px;color:var(--accent);font-weight:700;cursor:pointer}
+.reset-btn[hidden]{display:none}
+.reset-btn:hover{background:rgba(255,255,255,0.02)}
+
+/* page-bg: full page fixed image under the app panel; we make it monochrome using filter */
+.page-bg{
+  position:fixed;
+  inset:0;
+  z-index:-1; /* behind everything */
+  background-image: url('bg.jpg');
+  background-repeat: repeat; /* tile */
+  background-position: top left;
+  background-size: auto; /* keep original tile size */
+  /* subtle gray-ish background: fully desaturated, softened and dimmed so it won't compete
+     with the app content. Small blur + low opacity keeps texture but keeps focus on the panel. */
+  filter: grayscale(100%) contrast(.75) brightness(.85) blur(1.6px);
+  opacity: 0.12;
+  pointer-events:none;
+  will-change: opacity, filter;
+}
+.app-header{padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.app-header h1{margin:0;font-size:1.05rem;color: #f8fafc}
+.app-header .muted{margin:4px 0 0;color:var(--muted);font-size:0.85rem}
+.chat-window{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;overflow:auto;background-image:linear-gradient(transparent, rgba(255,255,255,0.01));}
+.composer{display:flex;padding:12px;border-top:1px solid rgba(255,255,255,0.03);gap:8px}
+.composer input{flex:1;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#f8fafc;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+.composer input::placeholder{color:rgba(255,255,255,0.6)}
+.composer button{background:var(--accent);color:#06202a;border-radius:999px;padding:10px 16px;border:none;font-weight:600;cursor:pointer}
+.bubble{max-width:72%;padding:10px 14px;border-radius:14px;line-height:1.25;color:#e6eef6}
+.row{display:flex;align-items:flex-end;gap:8px}
+.row.me{justify-content:flex-end}
+.bubble.me{background:var(--me);border-bottom-right-radius:4px;color:white;background-image:var(--me);background-size:100% 100%;}
+.bubble.them{background:linear-gradient(180deg,#0f1724,#0b1220);border-bottom-left-radius:4px;border:1px solid rgba(255,255,255,0.03);}
+.meta{font-size:11px;color:var(--muted);margin-top:6px}
+.hint{font-size:12px;color:var(--muted);padding:12px;text-align:center}
+.search-link{font-size:12px;padding-top:6px;color:var(--accent);display:inline-block}
+.ka{font-family:var(--mono);font-size:11px;color:#c7eef6;padding:6px 8px;border-radius:6px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.03)}
+.typing{height:9px;display:inline-block;vertical-align:middle}
+.typing span{width:6px;height:6px;margin-right:4px;background:rgba(255,255,255,0.12);border-radius:50%;display:inline-block;opacity:0;animation:blink 1.2s infinite}
+.typing span:nth-child(2){animation-delay:0.25s}
+.typing span:nth-child(3){animation-delay:0.5s}
+@keyframes blink{0%{opacity:0}30%{opacity:1}60%{opacity:.2}100%{opacity:0}}
+
+/* scroll area always shows last message */
+.chat-window::-webkit-scrollbar{width:8px}
+.chat-window::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#d1d5db,#9ca3af);border-radius:6px}
+
+@media (max-width:420px){.app{height:96vh}}
